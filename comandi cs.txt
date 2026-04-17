@@ -1,2 +1,0 @@
-viewmodel_offset_z -2
-viewmodel_offset_y 2
