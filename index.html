@@ -409,9 +409,97 @@
   .hint-tasto{display:none}
   .hud-panel{display:none}
 }
+
+
+
+
+
+/* 4. WARP transition */
+#warp-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:100;transition:opacity .12s}
+#warp-flash.on{opacity:.04}
+
+/* ══ GAME UI ══ */
+/* Toast achievement */
+#ach-toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);
+  background:rgba(8,16,32,.92);border:1px solid rgba(200,140,50,.4);
+  padding:.6rem 1.2rem;display:flex;align-items:center;gap:.8rem;
+  border-radius:2px;z-index:200;opacity:0;
+  transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .3s;
+  pointer-events:none;white-space:nowrap;
+}
+#ach-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.ach-toast-icon{font-size:1.1rem}
+.ach-toast-txt{font-family:var(--font-ui);font-size:var(--fs-xs);color:#d4a86a;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.ach-toast-sub{font-size:var(--fs-xs);color:rgba(140,180,215,.5);font-family:var(--font-ui);letter-spacing:.06em}
+
+/* Warp flash */
+#warp-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:100;transition:opacity .12s}
+#warp-flash.on{opacity:.04}
+
+/* Scanlines CRT */
+.sezione-contenuto::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,.06) 2px,
+    rgba(0,0,0,.06) 4px
+  );
+  pointer-events:none;
+  z-index:1;
+  opacity:0;
+  transition:opacity .4s;
+}
+.sezione-contenuto.attiva::before{opacity:1}
+
+/* Glitch hover sui titoli portfolio */
+.card-titolo{position:relative;display:inline-block;transition:color .1s}
+.card-titolo::before,.card-titolo::after{
+  content:attr(data-text);
+  position:absolute;
+  inset:0;
+  opacity:0;
+  font-family:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+  pointer-events:none;
+}
+.card-titolo::before{color:rgba(0,200,255,.7);clip-path:inset(0 0 60% 0)}
+.card-titolo::after{color:rgba(255,60,80,.7);clip-path:inset(60% 0 0 0)}
+.card:hover .card-titolo::before{
+  opacity:1;
+  animation:glitch-top .25s steps(2) infinite;
+}
+.card:hover .card-titolo::after{
+  opacity:1;
+  animation:glitch-bot .3s steps(2) infinite;
+}
+@keyframes glitch-top{
+  0%{transform:translate(-1px,0)}
+  50%{transform:translate(1px,0)}
+  100%{transform:translate(0,0)}
+}
+@keyframes glitch-bot{
+  0%{transform:translate(1px,0)}
+  50%{transform:translate(-1px,0)}
+  100%{transform:translate(0,0)}
+}
+
+/* Typewriter bio */
+.bio-typewriter{border-right:2px solid rgba(140,180,215,.6);animation:blink-caret .7s step-end infinite}
+@keyframes blink-caret{50%{border-color:transparent}}
 </style>
 </head>
 <body>
+<div id="warp-flash" aria-hidden="true"></div>
+<div id="ach-toast" aria-live="polite">
+  <span class="ach-toast-icon">🏆</span>
+  <div><div class="ach-toast-txt">Achievement sbloccato</div><div class="ach-toast-sub" id="ach-toast-sub"></div></div>
+</div>
 
 <!-- ══ LOADING SCREEN ══ -->
 <div id="loading-screen" role="status" aria-label="Caricamento in corso">
@@ -564,11 +652,11 @@
   <div class="sez-body"><div class="griglia-card">
 <div class="card">
   <div class="card-thumb"><img src="https://user-gen-media-assets.s3.amazonaws.com/gemini_images/3fe99805-6096-486e-84ff-cebc2953c54e.png" alt="Brand Identity" width="800" height="450" loading="lazy"><span class="card-thumb-label">Brand Identity</span></div>
-  <div class="card-info"><div><p class="card-titolo">Progetto 1</p><p class="card-meta">Brand Identity · 2025</p></div><span class="card-anno">2025</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Progetto 1">Progetto 1</p><p class="card-meta">Brand Identity · 2025</p></div><span class="card-anno">2025</span></div>
 </div>
 <div class="card">
   <div class="card-thumb"><img src="https://user-gen-media-assets.s3.amazonaws.com/gemini_images/f49c939d-5153-4ced-9f1f-883b47b49409.png" alt="Motion Reel" width="800" height="450" loading="lazy"><span class="card-thumb-label">Motion & Video</span></div>
-  <div class="card-info"><div><p class="card-titolo">Progetto 2</p><p class="card-meta">Motion & Video · 2025</p></div><span class="card-anno">2025</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Progetto 2">Progetto 2</p><p class="card-meta">Motion & Video · 2025</p></div><span class="card-anno">2025</span></div>
 </div>
 <div class="card">
   <div class="card-thumb">
@@ -578,7 +666,7 @@
     </div>
     <span class="card-thumb-label">Editorial & Print</span>
   </div>
-  <div class="card-info"><div><p class="card-titolo">Progetto 3</p><p class="card-meta">Editorial · 2024</p></div><span class="card-anno">2024</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Progetto 3">Progetto 3</p><p class="card-meta">Editorial · 2024</p></div><span class="card-anno">2024</span></div>
 </div>
 <div class="card">
   <div class="card-thumb">
@@ -589,7 +677,7 @@
     </div>
     <span class="card-thumb-label">Social Campaign</span>
   </div>
-  <div class="card-info"><div><p class="card-titolo">Social Campaign</p><p class="card-meta">Digital Design · 2024</p></div><span class="card-anno">2024</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Social Campaign">Social Campaign</p><p class="card-meta">Digital Design · 2024</p></div><span class="card-anno">2024</span></div>
 </div>
 <div class="card">
   <div class="card-thumb">
@@ -601,7 +689,7 @@
     </div>
     <span class="card-thumb-label">Logo Design</span>
   </div>
-  <div class="card-info"><div><p class="card-titolo">Logo & Visual ID</p><p class="card-meta">Illustrator · 2023</p></div><span class="card-anno">2023</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Logo & Visual ID">Logo & Visual ID</p><p class="card-meta">Illustrator · 2023</p></div><span class="card-anno">2023</span></div>
 </div>
 <div class="card">
   <div class="card-thumb">
@@ -617,7 +705,7 @@
     </div>
     <span class="card-thumb-label">Video Editing</span>
   </div>
-  <div class="card-info"><div><p class="card-titolo">Video Editing</p><p class="card-meta">Premiere Pro · 2023</p></div><span class="card-anno">2023</span></div>
+  <div class="card-info"><div><p class="card-titolo" data-text="Video Editing">Video Editing</p><p class="card-meta">Premiere Pro · 2023</p></div><span class="card-anno">2023</span></div>
 </div>
 </div></div>
 </section>
@@ -653,28 +741,28 @@
       <div class="ph ph-logo"><div class="ph-logo-ring ph-logo-ring-1"></div><div class="ph-logo-ring ph-logo-ring-2"></div><div class="ph-logo-ring ph-logo-ring-3"></div><span class="ph-logo-text">ID</span></div>
       <span class="card-thumb-label">Branding</span>
     </div>
-    <div class="card-info"><div><p class="card-titolo">Identità Visiva</p><p class="card-meta">Logo · Palette · Guidelines</p></div></div>
+    <div class="card-info"><div><p class="card-titolo" data-text="Identità Visiva">Identità Visiva</p><p class="card-meta">Logo · Palette · Guidelines</p></div></div>
   </div>
   <div class="card">
     <div class="card-thumb">
       <div class="ph ph-ed"><div class="ph-ed-left"><div class="ph-line ph-line-accent"></div><div class="ph-line"></div><div class="ph-line ph-line-short"></div><div class="ph-line ph-line-mid"></div></div><div class="ph-ed-img"></div></div>
       <span class="card-thumb-label">Editorial</span>
     </div>
-    <div class="card-info"><div><p class="card-titolo">Grafica Editoriale</p><p class="card-meta">Brochure · Cataloghi · Print</p></div></div>
+    <div class="card-info"><div><p class="card-titolo" data-text="Grafica Editoriale">Grafica Editoriale</p><p class="card-meta">Brochure · Cataloghi · Print</p></div></div>
   </div>
   <div class="card">
     <div class="card-thumb">
       <div class="ph ph-social"><div class="ph-phone ph-phone-l"><div class="ph-ph-head"></div><div class="ph-ph-line"></div></div><div class="ph-phone ph-phone-c"><div class="ph-ph-head"></div><div class="ph-ph-line"></div></div><div class="ph-phone ph-phone-r"><div class="ph-ph-head"></div><div class="ph-ph-line"></div></div></div>
       <span class="card-thumb-label">Social</span>
     </div>
-    <div class="card-info"><div><p class="card-titolo">Social & Digital</p><p class="card-meta">Post · Stories · Banner</p></div></div>
+    <div class="card-info"><div><p class="card-titolo" data-text="Social & Digital">Social & Digital</p><p class="card-meta">Post · Stories · Banner</p></div></div>
   </div>
   <div class="card">
     <div class="card-thumb">
       <div class="ph ph-logo"><div class="ph-logo-ring ph-logo-ring-1"></div><div class="ph-logo-ring ph-logo-ring-2"></div><span class="ph-logo-text">▶</span></div>
       <span class="card-thumb-label">Video</span>
     </div>
-    <div class="card-info"><div><p class="card-titolo">Video & Motion</p><p class="card-meta">Montaggio · Reels · Motion</p></div></div>
+    <div class="card-info"><div><p class="card-titolo" data-text="Video & Motion">Video & Motion</p><p class="card-meta">Montaggio · Reels · Motion</p></div></div>
   </div>
 </div>
     <div class="cta-box" style="margin-top:2.5rem">
@@ -1080,6 +1168,159 @@
     else       { bm.classList.remove('in-sezione'); }
   });
   sezioni.forEach(s => obs.observe(s, { attributes: true, attributeFilter: ['class'] }));
+})();
+</script>
+<script>
+// Cursore custom
+(function(){
+  const cur = document.getElementById('cursor');
+  if(!cur || window.matchMedia('(pointer:coarse)').matches) return;
+  let mx=0, my=0;
+  document.addEventListener('mousemove', e=>{
+    mx=e.clientX; my=e.clientY;
+    cur.style.left = mx+'px';
+    cur.style.top  = my+'px';
+  });
+  document.addEventListener('mousedown',()=>cur.classList.add('click'));
+  document.addEventListener('mouseup',  ()=>cur.classList.remove('click'));
+  const hotspots = 'a,button,.card,.voce-link,.contact-card-new,.achievement-item,.cta-btn,.social-btn';
+  document.querySelectorAll(hotspots).forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('hover'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));
+  });
+})();
+</script>
+<script>
+(function(){
+  // 1. XP bars — si riempiono quando la sezione diventa visibile
+  function animateXP(){
+    document.querySelectorAll('
+    });
+  }
+  document.addEventListener('scroll', animateXP, {passive:true});
+  document.querySelectorAll('.sezione-contenuto').forEach(s=>{
+    s.addEventListener('scroll', animateXP, {passive:true});
+  });
+  setTimeout(animateXP, 600);
+
+  // 2. Toast achievement — appare quando si vedono gli achievement
+  const toast = document.getElementById('ach-toast');
+  const toastSub = document.getElementById('ach-toast-sub');
+  const achItems = document.querySelectorAll('.achievement-item');
+  let toastShown = false;
+  const toastObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !toastShown){
+        toastShown = true;
+        const name = e.target.querySelector('.ach-name');
+        if(toastSub && name) toastSub.textContent = name.textContent;
+        toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'), 3200);
+      }
+    });
+  },{threshold:.6});
+  achItems.forEach(a=>toastObs.observe(a));
+
+  // 3. Warp flash leggero sulle transizioni di sezione
+  const flash = document.getElementById('warp-flash');
+  function warp(){
+    if(!flash) return;
+    flash.classList.add('on');
+    setTimeout(()=>flash.classList.remove('on'), 120);
+  }
+  document.querySelectorAll('.voce-link').forEach(v=>{
+    v.addEventListener('click', warp);
+  });
+  document.querySelectorAll('[data-chiudi]').forEach(b=>{
+    b.addEventListener('click', warp);
+  });
+})();
+</script>
+<script>
+(function(){
+
+  // ── WARP FLASH ──
+  const flash = document.getElementById('warp-flash');
+  function warp(){
+    if(!flash) return;
+    flash.classList.add('on');
+    setTimeout(()=>flash.classList.remove('on'), 120);
+  }
+  document.querySelectorAll('.voce-link,[data-chiudi]').forEach(v=>v.addEventListener('click', warp));
+
+  // ── TOAST ACHIEVEMENT ──
+  const toast  = document.getElementById('ach-toast');
+  const toastSub = document.getElementById('ach-toast-sub');
+  let toastShown = false;
+  const toastObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !toastShown){
+        toastShown = true;
+        const name = e.target.querySelector('.ach-name');
+        if(toastSub && name) toastSub.textContent = name.textContent;
+        toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'), 3200);
+      }
+    });
+  },{threshold:.6});
+  document.querySelectorAll('.achievement-item').forEach(a=>toastObs.observe(a));
+
+  // ── TYPEWRITER BIO ──
+  function typewriter(el, text, speed){
+    el.textContent='';
+    el.classList.add('bio-typewriter');
+    let i=0;
+    const iv = setInterval(()=>{
+      el.textContent += text[i++];
+      if(i>=text.length){ clearInterval(iv); el.classList.remove('bio-typewriter'); }
+    }, speed);
+  }
+
+  // Avvio typewriter quando si apre "Chi Sono"
+  const chiSono = document.getElementById('sezione-chi-sono');
+  if(chiSono){
+    let twDone = false;
+    const obs = new MutationObserver(()=>{
+      if(chiSono.classList.contains('attiva') && !twDone){
+        twDone = true;
+        // Typewriter sul bio-subtitle
+        const sub = chiSono.querySelector('.bio-subtitle');
+        if(sub){
+          const orig = sub.textContent;
+          setTimeout(()=>typewriter(sub, orig, 38), 300);
+        }
+      }
+    });
+    obs.observe(chiSono, {attributes:true, attributeFilter:['class']});
+  }
+
+  // ── ACHIEVEMENT TOAST PER OGNI SEZIONE ──
+  const pageAch = {
+    'sezione-chi-sono':   {icon:'🧠', txt:'Chi Sono', sub:'Profilo scoperto'},
+    'sezione-portfolio':  {icon:'🎨', txt:'Portfolio', sub:'Opere consultate'},
+    'sezione-servizi':    {icon:'⚙️', txt:'Servizi', sub:'Missioni disponibili'},
+    'sezione-contatti':   {icon:'📡', txt:'Contatti', sub:'Comunicazione aperta'},
+  };
+  let shownPages = new Set();
+  const pageObs = new MutationObserver(()=>{
+    Object.entries(pageAch).forEach(([id, data])=>{
+      const el = document.getElementById(id);
+      if(el && el.classList.contains('attiva') && !shownPages.has(id)){
+        shownPages.add(id);
+        const icon = toast.querySelector('.ach-toast-icon');
+        if(icon) icon.textContent = data.icon;
+        const txt = toast.querySelector('.ach-toast-txt');
+        if(txt) txt.textContent = data.txt + ' — Sbloccato';
+        if(toastSub) toastSub.textContent = data.sub;
+        setTimeout(()=>{
+          toast.classList.add('show');
+          setTimeout(()=>toast.classList.remove('show'), 2800);
+        }, 400);
+      }
+    });
+  });
+  document.querySelectorAll('.sezione-contenuto').forEach(s=>pageObs.observe(s,{attributes:true,attributeFilter:['class']}));
+
 })();
 </script>
 </body>
